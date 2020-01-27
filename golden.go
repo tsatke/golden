@@ -2,7 +2,7 @@ package golden
 
 import (
 	"bytes"
-	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
@@ -58,8 +58,9 @@ func (g G) Assert(name string, got []byte) {
 // and comparing it against the file's contents.
 func (g G) AssertStruct(name string, got interface{}) {
 	var buf bytes.Buffer
-	if err := gob.NewEncoder(&buf).Encode(got); err != nil {
-		g.t.Errorf("unable to encode instance of %T: %w", got, err)
+	enc := json.NewEncoder(&buf)
+	if err := enc.Encode(got); err != nil {
+		g.t.Errorf("unable to encode instance of %T: %v", got, err)
 	} else {
 		g.Assert(name, buf.Bytes())
 	}
