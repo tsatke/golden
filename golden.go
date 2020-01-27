@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// G is the object that assertions are made on.
 type G struct {
 	t  testing.TB
 	fs afero.Fs
@@ -23,6 +24,7 @@ type G struct {
 	FixtureSuffix string
 }
 
+// New creates a new, ready to use G.
 func New(t testing.TB) G {
 	return newG(t)
 }
@@ -37,6 +39,9 @@ func newG(t testing.TB) G {
 	}
 }
 
+// Assert asserts, that the given byte slice has the same content as a file,
+// whose path is derived from the given name (usually
+// "testdata/"+name+".golden").
 func (g G) Assert(name string, got []byte) {
 	if g.ShouldUpdate {
 		err := g.write(name, got)
@@ -47,6 +52,10 @@ func (g G) Assert(name string, got []byte) {
 	}
 }
 
+// AssertStruct asserts, that the given struct has the same content as a file,
+// whose path is derived from the given name (usually
+// "testdata/"+name+".golden"). This is ensured by gob-encoding the given struct
+// and comparing it against the file's contents.
 func (g G) AssertStruct(name string, got interface{}) {
 	var buf bytes.Buffer
 	if err := gob.NewEncoder(&buf).Encode(got); err != nil {
