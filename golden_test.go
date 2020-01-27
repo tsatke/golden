@@ -34,7 +34,7 @@ func setupEnvFs(fs afero.Fs) {
 			panic("unable to write full content")
 		}
 
-		f.Close()
+		_ = f.Close()
 	}
 }
 

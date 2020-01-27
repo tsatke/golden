@@ -85,7 +85,7 @@ func (g G) readFile(path string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open: %w", err)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -105,7 +105,7 @@ func (g G) writeFile(path string, data []byte) error {
 	if err != nil {
 		return fmt.Errorf("create: %w", err)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	n, err := file.Write(data)
 	if err != nil {
